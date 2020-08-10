@@ -1,0 +1,36 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PiVPN Web | Log in</title>
+  {% block script %}
+    {{ form.media }}
+  <link rel="stylesheet" href='{% static "plugins/fontawesome-free/css/all.min.css" %}'>
+  <link rel="stylesheet" href='{% static "css/source-sans-pro.css" %}'>
+  <link rel="stylesheet" href='{%static "dist/css/adminlte.min.css"%}'>
+  {% endblock %}
+  {%block extra-css%}
+  {%endblock extra-css%}
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href='{%url "index"%}'><b>PiVPN</b> Web</a>
+  </div>
+  <div class="card">
+    <div class="card-body login-card-body">
+        {% block content %}
+          {% include "django_pam/accounts/_login.html" %}
+        {% endblock %}
+    </div>
+  </div>
+</div>
+<script src='{% static "plugins/jquery/jquery.min.js" %}'></script>
+<script src='{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}'></script>
+<script src='{%static "dist/js/adminlte.min.js"%}'></script>
+<script src='{%static "js/pivpn-web.js"%}'></script>
+<script src='{%static "js/login.js"%}'></script>
+</body>
+</html>

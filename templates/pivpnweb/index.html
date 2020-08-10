@@ -1,0 +1,203 @@
+{% extends "pivpnweb/base.html" %}
+{% load static %}
+
+{%block extra-css%}
+<link rel="stylesheet" href='{% static "plugins/datatables-bs4/css/dataTables.bootstrap4.min.css" %}'>
+<link rel="stylesheet" href='{% static "plugins/datatables-buttons/css/buttons.dataTables.min.css" %}'>
+<link rel="stylesheet" href='{% static "plugins/datatables-responsive/css/responsive.bootstrap4.min.css" %}'>
+
+{%endblock extra-css%}
+
+
+
+{%block content%}
+<div class="wrapper">
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+    <div class="container">
+      <a href="javascript:void(0)" class="navbar-brand">
+        <span class="brand-text font-weight-light" style="font-size:1.8rem;">PiVPN Web</span>
+      </a>
+      <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="index3.html" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">Contact</a>
+          </li>
+        </ul>
+        <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <strong style="margin-right:0.2rem;">Logout</strong>
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container">
+        <div class="row mb-2">
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{connected_users}}</h3>
+                <p>Connected users</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-secondary">
+              <div class="inner">
+                <h3>{{active_users}}</h3>
+                <p>Active users</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-users"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{cpu_percent}}<sup style="font-size: 20px">%</sup></h3>
+                <p>Freq. {{cpu_freq}} MHz</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-microchip"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{memory_percent}}<sup style="font-size: 20px">%</sup></h3>
+                <p>{{memory_free}} / {{memory_total}}</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-memory"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <table class="table table-valign-middle table-hover" id="datatable">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Status</th>
+                      <th>Profile</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% comment %}
+                  {% for paciente in pacientes %}
+                    <tr>
+                      <input type="hidden" value="{{paciente.id}}">
+                      <td>
+                        {{ paciente.apellido|title }}
+                      </td>
+                      <td>
+                        {{ paciente.nombre|title }}
+                      </td>
+                      <td>
+                        {{ paciente.dni | default:paciente.cuit }}
+                      </td>
+                      <td class="text-center"><i class="icono-ver-recepcion fa fa-eye" style="margin-right:1rem;"></i>Ver</td>
+                    </tr>
+                  {% endfor %}
+                  {% endcomment %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="main-footer">
+    <div class="float-right d-none d-sm-inline"><strong>Version</strong> 1</div>
+    <strong>Powered with
+    <a href="https://www.djangoproject.com/">Django</a>,
+    <a href="https://adminlte.io">AdminLTE</a> &
+    <a href="https://www.pivpn.io/">PiVPN</a>.</strong>
+  </footer>
+</div>
+{%endblock content%}
+
+{%block extra-js%}
+<script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+<script src='{% static "plugins/datatables-bs4/js/dataTables.bootstrap4.min.js" %}'></script>
+<script src='{% static "plugins/datatables-responsive/js/dataTables.responsive.min.js" %}'></script>
+<script src='{% static "plugins/datatables-responsive/js/responsive.bootstrap4.min.js" %}'></script>
+<script src='{% static "plugins/datatables-buttons/js/dataTables.buttons.min.js" %}'></script>
+<script>
+table = $("#datatable").DataTable({
+    "responsive": true,
+    "paging": true,
+    "lengthChange": false,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": false,
+    "pageLength": 7,
+    dom: 'Bfrtip',
+    buttons:[
+    {
+        text: 'Create',
+        className: 'btn btn-outline-dark',
+        attr:
+        {
+            id: 'articulo-nuevo'
+        },
+        action: function ( e, dt, node, config )
+        {
+          //$('#modal-nuevo-articulo').modal('show')
+        },
+        init: function(api, node, config){
+          $(node).removeClass('dt-button')
+        }
+    }],
+});
+
+ /*tabla = $('#datatable').DataTable(
+  {
+    "language": {'url': url_json_datatable},
+    "ajax": url_recepciones_fecha,
+
+
+    columns:[
+      { "data": "fecha" },
+      { "data": "paciente" },
+    ],
+    "columnDefs":[
+        {
+            "targets": 2,
+            "render": function ( data, type, row, meta )
+            {
+                return '<i class="icono-ver-recepcion fa fa-eye" style="margin-right:1rem;"></i>Ver';
+            }
+        }
+    ],
+  })*/
+
+</script>
+{%endblock extra-js%}
