@@ -3,6 +3,6 @@ __pycache__
 .idea
 *$py.class
 *.sqlite3
-settings/local.py
+pivpnweb/local.py
 logs/
 pivpn.pid
