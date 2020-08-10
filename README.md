@@ -1,2 +1,5 @@
 # pivpn-web
-A Python web interface for PiVPN
+A Python web interface for PiVPN. Made with:
+
+* Django
+* AdminLTE 3
