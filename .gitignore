@@ -6,3 +6,4 @@ __pycache__
 pivpnweb/local.py
 logs/
 pivpn.pid
+.vscode
