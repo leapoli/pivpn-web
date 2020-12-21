@@ -14,7 +14,7 @@
 <div class="wrapper">
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
-      <a href="javascript:void(0)" class="navbar-brand">
+      <a href='{%url "index"%}' class="navbar-brand">
         <span class="brand-text font-weight-light" style="font-size:1.8rem;">PiVPN Web</span>
       </a>
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,10 +45,10 @@
       <div class="container">
         <div class="row mb-2">
           <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
+            <div class="small-box bg-success">
               <div class="inner">
-                <h3>{{connected_users}}</h3>
-                <p>Connected users</p>
+                <h3>{{connected_users|length}}</h3>
+                <p>Valid users</p>
               </div>
               <div class="icon">
                 <i class="fas fa-user"></i>
@@ -58,16 +58,16 @@
           <div class="col-lg-3 col-6">
             <div class="small-box bg-secondary">
               <div class="inner">
-                <h3>{{active_users}}</h3>
-                <p>Active users</p>
+                <h3>{{connected_users|length}}</h3>
+                <p>Revoked users</p>
               </div>
               <div class="icon">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-user-times"></i>
               </div>
             </div>
           </div>
           <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
+            <div class="small-box bg-info">
               <div class="inner">
                 <h3>{{cpu_percent}}<sup style="font-size: 20px">%</sup></h3>
                 <p>Freq. {{cpu_freq}} MHz</p>
@@ -100,30 +100,39 @@
                 <table class="table table-valign-middle table-hover" id="datatable">
                   <thead>
                     <tr>
-                      <th>User</th>
-                      <th>Status</th>
-                      <th>Profile</th>
+                      <th>Name</th>
+                      <th>Remote IP</th>
+                      <th>Virtual IP</th>
+                      <th>Bytes Received</th>
+                      <th>Bytes Sent</th>
+                      <th>Connected Since</th>                                    
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
-                  {% comment %}
-                  {% for paciente in pacientes %}
+                  {% for user in connected_users %}
                     <tr>
-                      <input type="hidden" value="{{paciente.id}}">
                       <td>
-                        {{ paciente.apellido|title }}
+                        {{user.name}}
                       </td>
                       <td>
-                        {{ paciente.nombre|title }}
+                        {{user.remote_ip}}
                       </td>
                       <td>
-                        {{ paciente.dni | default:paciente.cuit }}
+                        {{user.virtual_ip}}
                       </td>
-                      <td class="text-center"><i class="icono-ver-recepcion fa fa-eye" style="margin-right:1rem;"></i>Ver</td>
+                      <td>
+                        {{user.bytes_received}}
+                      </td>
+                      <td>
+                        {{user.bytes_sent}}
+                      </td>
+                      <td>
+                        {{user.connected_since}}
+                      </td>
+                      <td class="text-center"><a href="javascript:void(0)"><i class="fa fa-cog" style="margin-right:1rem;"></i></a></td>
                     </tr>
                   {% endfor %}
-                  {% endcomment %}
                   </tbody>
                 </table>
               </div>
@@ -162,7 +171,7 @@ table = $("#datatable").DataTable({
     dom: 'Bfrtip',
     buttons:[
     {
-        text: 'Create',
+        text: 'Create user',
         className: 'btn btn-outline-dark',
         attr:
         {
@@ -177,27 +186,5 @@ table = $("#datatable").DataTable({
         }
     }],
 });
-
- /*tabla = $('#datatable').DataTable(
-  {
-    "language": {'url': url_json_datatable},
-    "ajax": url_recepciones_fecha,
-
-
-    columns:[
-      { "data": "fecha" },
-      { "data": "paciente" },
-    ],
-    "columnDefs":[
-        {
-            "targets": 2,
-            "render": function ( data, type, row, meta )
-            {
-                return '<i class="icono-ver-recepcion fa fa-eye" style="margin-right:1rem;"></i>Ver';
-            }
-        }
-    ],
-  })*/
-
 </script>
 {%endblock extra-js%}

@@ -17,18 +17,9 @@ from django.urls import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+DEBUG = False
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# TODO Change to your own key
-SECRET_KEY = 'my_secret_key'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['']
 
 
 # Application definition
@@ -41,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_pam',
+    'vpn',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +134,5 @@ LOGIN_REDIRECT_URL = reverse_lazy('index')
 
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
+try: from .local import *
+except ImportError: pass
