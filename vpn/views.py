@@ -3,7 +3,8 @@ from subprocess import run, PIPE
 
 from django.shortcuts import render
 
-commands = {"connected_users": "echo '1234' | sudo -S pivpn -c",}
+commands = {"connected_users": "echo '1234' | sudo -S pivpn -c",
+            "list_users": "echo '1234' | sudo -S pivpn -l",}
 
 def get_connected_users():
     """
@@ -35,7 +36,7 @@ def get_connected_users():
 
     connected_users = []
     result = run(commands["connected_users"], stdout=PIPE, shell=True).stdout.decode("utf-8").strip().split("\n")[5:]
-    if "No Clients Connected" in result:
+    if "No Clients Connected" in result[0]:
         return connected_users
     else:
         for client in result:
@@ -47,3 +48,28 @@ def get_connected_users():
                                     "bytes_sent": client[4],
                                     "connected_since": client[5]})
         return connected_users
+
+def get_list_users():
+    """
+    Get the list of users, valids and revoked; by parsing the output of pivpn -l.
+
+    Returns:
+        list_users(list): List of users.
+    """
+    
+    # Format of output (line below is the first):
+    # : NOTE : The first entry should always be your valid server!
+    # 
+    # ::: Certificate Status List :::
+    # Status      Name                                            Expiration
+    # Valid       pivpn_022be4ab-f3ca-4067-8a4c-2838bb6f19c6      sep 08 2030
+    # Valid       test                                            dic 06 2023
+    # Valid       test2                                           dic 06 2023
+    list_users = []
+    result = run(commands["list_users"], stdout=PIPE, shell=True).stdout.decode("utf-8").strip().split("\n")[4:]
+    for user in result:
+        user = sub("[\s]{2,}","|", user).split("|")
+        list_users.append({"status": user[0],
+                           "name": user[1],
+                           "expiration": user[2]})
+    return list_users

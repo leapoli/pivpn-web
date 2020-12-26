@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from psutil import cpu_percent, cpu_freq, virtual_memory
 
-from vpn.views import get_connected_users
+from vpn.views import get_connected_users, get_list_users
 
 def bytes2human(n):
     # http://code.activestate.com/recipes/578019
@@ -26,11 +26,20 @@ def bytes2human(n):
 
 @login_required
 def index(request):
+    valid_users = []
+    revoked_users = []
+    for user in get_list_users():
+        if user.get("status", None).lower() == "valid":
+            valid_users.append(user)
+        else:
+            revoked_users.append(user)
     context = {"cpu_percent": cpu_percent(interval=None),
                "cpu_freq": round(cpu_freq().current, 2),
                "memory_total": bytes2human(virtual_memory().total),
                "memory_free": bytes2human(virtual_memory().available),
                "memory_percent": round((virtual_memory().available/virtual_memory().total)*100, 2),
-               "connected_users": get_connected_users()}
+               "connected_users": get_connected_users(),
+               "valid_users": valid_users,
+               "revoked_users": revoked_users}
     return render(request, "pivpnweb/index.html", context=context)
 
