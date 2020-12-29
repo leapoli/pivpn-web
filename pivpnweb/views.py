@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django_pam.auth.backends import PAMBackend
 from psutil import cpu_percent, cpu_freq, virtual_memory
 
-from vpn.views import get_connected_users, get_list_users
+from vpn.views import PiVPN
 
 def bytes2human(n):
     # http://code.activestate.com/recipes/578019
@@ -30,9 +30,10 @@ def bytes2human(n):
 
 @login_required
 def index(request):
+    pivpn = PiVPN(request)
     valid_users = []
     revoked_users = []
-    for user in get_list_users():
+    for user in pivpn.get_list_users():
         if user.get("status", None).lower() == "valid":
             valid_users.append(user)
         else:
@@ -42,7 +43,7 @@ def index(request):
                "memory_total": bytes2human(virtual_memory().total),
                "memory_free": bytes2human(virtual_memory().available),
                "memory_percent": round((virtual_memory().available/virtual_memory().total)*100, 2),
-               "connected_users": get_connected_users(),
+               "connected_users": pivpn.get_connected_users(),
                "valid_users": valid_users,
                "revoked_users": revoked_users}
     return render(request, "pivpnweb/index.html", context=context)
