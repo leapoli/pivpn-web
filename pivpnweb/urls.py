@@ -23,10 +23,9 @@ template_login = 'pivpnweb/login.html'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^login/$', LoginView.as_view(template_name=template_login, redirect_authenticated_user=True), name='login'),
+    path('login/', views.custom_login, name='login'),
+    # re_path(r'^login/$', LoginView.as_view(template_name=template_login, redirect_authenticated_user=True), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    # re_path(r"^logout/(?P<next>[\w\-\:/]+)?$", LogoutView.as_view(template_name=template_login),
-    #         name='logout'),
     # path('404', TemplateView.as_view(template_name='404.html'), name="404"),
     # path('500', TemplateView.as_view(template_name='500.html'), name="500"),
     path('', views.index, name='index'),

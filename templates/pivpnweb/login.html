@@ -21,11 +21,52 @@
   </div>
   <div class="card">
     <div class="card-body login-card-body">
-        {% block content %}
-          {% include "django_pam/accounts/_login.html" %}
-        {% endblock %}
+      <h4 class="login-box-msg">Sign in</h4>
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="User" name="username" id="username">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" placeholder="Password" name="password" id="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <input type="checkbox" name="remember" id="remember">
+            <label for="remember">
+              Remember me
+            </label>
+          </div>
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
+  {% if messages %}
+  {% for message in messages %}
+  <div class="text-center">
+    {% if message.tags == "error" %}
+    <span style="color:red;">
+    {% else %}
+    <span style="color:#007bff;font-weight: bold;">
+    {% endif %}
+      {{ message }}
+    </span>
+  </div>
+  {% endfor %}
+{% endif %}
 </div>
 <script src='{% static "plugins/jquery/jquery.min.js" %}'></script>
 <script src='{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}'></script>
